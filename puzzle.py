@@ -13,7 +13,14 @@ class Puzzle :
         self.findEmpty()
 
     def __lt__(self,other) :
-        return self.findcost() < other.findcost()
+        return self.findcost() <= other.findcost()
+
+    def __str__ (self) :
+        newpuzzle = (np.reshape(self.matrix,16)).tolist()
+        asStr = ''
+        for i in range (16) :
+            asStr += f"{newpuzzle[i]}"
+        return asStr
 
     def randomPuzzleGenerator(self) :
         self.matrix = np.arange(0,16)
@@ -90,38 +97,50 @@ class Puzzle :
     def findcost(self) :
         return self.fCost + self.gCost
     
-    #Fungsi buat ngecheck apakah puzzle bisa digerakin
+
     def checkUp(self) :
         return self.kosong[0] != 0
     def checkDown(self) :
-        return self.kosong[0] != 0
+        return self.kosong[0] != 3
     def checkLeft(self) :
         return self.kosong[1] != 0
     def checkRight(self) :
         return self.kosong[1] != 3
+
+    def checkAvailableMove(self) :
+        availableMoves = []
+        if(self.kosong[0] != 0) :
+            availableMoves.append("up")
+        if(self.kosong[1] != 3) :
+            availableMoves.append("right")
+        if(self.kosong[0] != 3) :
+            availableMoves.append("down")
+        if(self.kosong[1] != 0) :
+            availableMoves.append("left")
+        return availableMoves
 
     #Fungsi gerakin puzzle
     def moveUp(self) :
         copy = np.ndarray.copy(self.matrix)
         i,j = self.kosong[0], self.kosong[1]
 
-        indexBefore = (i-1) * 4 + j
+        indexBefore = ((i-1) * 4) + j
         indexAfter = i*4 + j
         gcostafter = self.gCost
         if(copy[i-1][j] == indexBefore + 1) :
             gcostafter += 1
-        elif(copy[i-1][j] - 1 == indexAfter + 1) :
+        elif(copy[i-1][j]  == indexAfter + 1) :
             gcostafter -= 1
         
-
+        newFcost = self.fCost + 1
         copy[i][j], copy[i-1][j] =  copy[i-1][j], copy[i][j]
-        child = Puzzle(copy, self.parents + ["up"], gcostafter, self.fCost + 1)
+        child = Puzzle(copy, self.parents + ["up"], gcostafter, newFcost)
         return child
     def moveDown(self) :
         copy = np.ndarray.copy(self.matrix)
         i,j = self.kosong[0], self.kosong[1]
 
-        indexBefore = (i+1) * 4 + j
+        indexBefore = ((i+1) * 4) + j
         indexAfter = i*4 + j
         gcostafter = self.gCost    
         if(copy[i+1][j] == indexBefore + 1) :
@@ -130,29 +149,31 @@ class Puzzle :
             gcostafter -= 1
 
         copy[i][j], copy[i+1][j] =  copy[i+1][j], copy[i][j]
-        child = Puzzle(copy, self.parents + ["up"], gcostafter, self.fCost + 1)
+        newFcost = self.fCost + 1
+        child = Puzzle(copy, self.parents + ["down"], gcostafter, newFcost)
         return child
     def moveLeft(self) :
         copy = np.ndarray.copy(self.matrix)
         i,j = self.kosong[0], self.kosong[1]
         gcostafter = self.gCost
-        indexBefore = (i) * 4 + j - 1
+        indexBefore = (i * 4) + (j - 1)
         indexAfter = i*4 + j
 
         if(copy[i][j-1] == indexBefore + 1) :
             gcostafter += 1
-        elif(copy[i][j-1] - 1 == indexAfter + 1) :
+        elif(copy[i][j-1] == indexAfter + 1) :
             gcostafter -= 1
 
+        newFcost = self.fCost + 1
         copy[i][j], copy[i][j-1] =  copy[i][j-1], copy[i][j]
-        child = Puzzle(copy, self.parents + ["up"], gcostafter, self.fCost + 1)
+        child = Puzzle(copy, self.parents + ["left"], gcostafter, newFcost)
         
         return child
     def moveRight(self) :
         copy = np.ndarray.copy(self.matrix)
         i,j = self.kosong[0], self.kosong[1]
         gcostafter = self.gCost
-        indexBefore = (i) * 4 + j + 1
+        indexBefore = (i * 4) + (j+1)
         indexAfter = i*4 + j
 
         if(copy[i][j+1] == indexBefore + 1) :
@@ -161,7 +182,8 @@ class Puzzle :
             gcostafter -= 1
 
         copy[i][j], copy[i][j+1] =  copy[i][j+1], copy[i][j]
-        child = Puzzle(copy, self.parents + ["up"], gcostafter, self.fCost + 1)
+        newFcost = self.fCost + 1
+        child = Puzzle(copy, self.parents + ["right"], gcostafter, newFcost)
         return child
     
     def isSolved(self) :
