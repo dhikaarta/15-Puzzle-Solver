@@ -1,6 +1,7 @@
 from puzzle import *
 import numpy as np
 from queue import PriorityQueue
+import timeit
 
 print("SELAMAT DATANG DI 15-PUZZLE-SOLVER :D\n")
 print("Terdapat 2 Pilihan untuk 15-Puzzle : ")
@@ -11,15 +12,16 @@ cc = int(input("Silahkan Masukkan pilihan anda : "))
 if (cc == 1) :
     puzzle = Puzzle()   
 if (cc == 2) :
-    filename = "./" + input("input filename : ")
+    filename = "./Test/" + input("input filename : ")
     with open(filename, 'r') as f :
         inputMatrix = [[int(num) for num in line.split(' ')] for line in f]
     puzzle = Puzzle(inputMatrix, [])
 
+start = timeit.default_timer()
 puzzle.setGcost(puzzle.countGCost())
 
 print("Matrix Awal :")
-print(puzzle.matrix)
+puzzle.printMatrix()
 print("=" * 35)
 print("Nilai untuk setiap fungsi Kurang (i) : ")
 for i in range(1,17) :
@@ -68,13 +70,16 @@ else :
                     if(str(new) not in visited) :
                         nodeVisited += 1
                         matQueue.put(new)
+    stop = timeit.default_timer()
     
-    print(solutions)
-    print(nodeVisited)
-    print(f"banyak step = {len(currentNode.parents)}")
-    
+    puzzle.stepSoFar(solutions[0])
 
-
+    print("-" * 35)
+    print(f"• Solusi yang didapat = {solutions}")
+    print(f"• Banyak step = {len(currentNode.parents)} step")
+    print(f"• Waktu Eksekusi : {stop - start} detik")
+    print(f"• Node yang dibangkitkan : {nodeVisited} node")
+    print("-" * 35)
 
 
     

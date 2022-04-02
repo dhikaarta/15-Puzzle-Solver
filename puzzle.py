@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 class Puzzle :
     def __init__(self, matrix = [], parents = [], gcost = 0, fcost = 0) :
@@ -72,9 +73,9 @@ class Puzzle :
         newpuzzle = (np.reshape(self.matrix,16))
         newpuzzle = newpuzzle.tolist()
         index = newpuzzle.index(0)
-        if(index in {2,4,5,7,10,12,13,15}):
+        if(index in {0,2,5,7,8,10,13,15}):
             return 0
-        else :
+        elif(index in {1,3,4,6,9,11,12,14}) :
             return 1
 
     def isReachable(self) :
@@ -188,3 +189,41 @@ class Puzzle :
     
     def isSolved(self) :
         return self.gCost == 0
+    
+    def stepSoFar(self,solution) :
+        copied = copy.deepcopy(self)
+        print("\nPosisi Awal : ")
+        self.printMatrix()
+        print("")
+        i = 1
+        for move in solution :
+            print("=" * 35)
+            if(move == "up") :
+                print(f"Step ke - {i} : UP, Puzzle Menjadi :")
+                copied = copied.moveUp()
+            if(move == "down") :
+                print(f"Step ke - {i} : DOWN, Puzzle Menjadi :")
+                copied = copied.moveDown()
+            if(move == "right") :
+                print(f"Step ke - {i} : RIGHT, Puzzle Menjadi :")
+                copied = copied.moveRight()
+            if(move == "left") :
+                print(f"Step ke - {i} : LEFT, Puzzle Menjadi :")
+                copied = copied.moveLeft()
+            if(i == len(solution)) :
+                print("Posisi Akhir, Puzzle Solved ")
+            copied.printMatrix()
+            i += 1
+
+    def printMatrix(self) :
+        print("╔═══╦═══╦═══╦═══╗")
+        for i in range(4):
+            for j in range(4):
+                print("║ ",end="")
+                print(self.matrix[i][j], end="")
+                if(self.matrix[i][j] < 10):
+                    print(" ", end="")
+            print("║")
+            if(i != 3):
+                print("╠═══╬═══╬═══╬═══╣")
+        print("╚═══╩═══╩═══╩═══╝")
