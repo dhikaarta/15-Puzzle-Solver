@@ -36,7 +36,7 @@ print(f"Nilai untuk Σ Kurang(i) + X = {puzzle.checkKurang() + puzzle.checkEmpty
 if(not puzzle.isReachable()) :
     print("Puzzle tidak dapat di Solve\n")
 else :
-
+    print("\nPuzzle bisa di solve, steps : ")
     visited = {}
     solutions = []
     matQueue = PriorityQueue()
