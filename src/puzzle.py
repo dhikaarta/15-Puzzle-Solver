@@ -14,6 +14,8 @@ class Puzzle :
         self.findEmpty()
 
     def __lt__(self,other) :
+        if(self.findcost() == other.findcost()) :
+            return self.fCost >= other.fCost
         return self.findcost() <= other.findcost()
 
     def __str__ (self) :
@@ -98,16 +100,6 @@ class Puzzle :
     def findcost(self) :
         return self.fCost + self.gCost
     
-
-    def checkUp(self) :
-        return self.kosong[0] != 0
-    def checkDown(self) :
-        return self.kosong[0] != 3
-    def checkLeft(self) :
-        return self.kosong[1] != 0
-    def checkRight(self) :
-        return self.kosong[1] != 3
-
     def checkAvailableMove(self) :
         availableMoves = []
         if(self.kosong[0] != 0) :
@@ -220,7 +212,10 @@ class Puzzle :
         for i in range(4):
             for j in range(4):
                 print("║ ",end="")
-                print(self.matrix[i][j], end="")
+                if(self.matrix[i][j] == 0) :
+                    print(" ", end= "")
+                else :
+                    print(self.matrix[i][j], end="")
                 if(self.matrix[i][j] < 10):
                     print(" ", end="")
             print("║")

@@ -23,10 +23,13 @@ puzzle.setGcost(puzzle.countGCost())
 print("Matrix Awal :")
 puzzle.printMatrix()
 print("=" * 35)
-print("Nilai untuk setiap fungsi Kurang (i) : ")
+print("Nilai untuk setiap fungsi Kurang (i) : \n")
 for i in range(1,17) :
     count = puzzle.checkKurangIndividual(i)
-    print(f"i = {i} | Kurang {i} = {count}")
+    if(i < 10) :
+        print(f"i = {i}  | Kurang {i} = {count}")
+    else :
+        print(f"i = {i} | Kurang {i} = {count}")
 print("=" * 35)
 print(f"Nilai untuk Σ Kurang(i) + X = {puzzle.checkKurang() + puzzle.checkEmpty()}")
 
@@ -46,6 +49,7 @@ else :
 
         if(currentNode.isSolved()) :
             solutions.append(currentNode.parents)
+            stop = timeit.default_timer()
             break
         else :
             availableMoves = currentNode.checkAvailableMove()
@@ -70,7 +74,7 @@ else :
                     if(str(new) not in visited) :
                         nodeVisited += 1
                         matQueue.put(new)
-    stop = timeit.default_timer()
+    
     
     puzzle.stepSoFar(solutions[0])
 
